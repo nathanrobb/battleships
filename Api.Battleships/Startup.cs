@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace Api.Battleships
 {
@@ -19,6 +21,14 @@ namespace Api.Battleships
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
+
+			services.AddLogging(loggingBuilder =>
+			{
+				loggingBuilder
+					.ClearProviders()
+					.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace)
+					.AddNLog(Configuration);
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
