@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Api.Battleships.v1.Controllers
 {
-	[Route("v1/[controller]")]
+	[Route("v1/battleships")]
 	[Authorize]
 	[ApiController]
 	public class BattleshipsController : ControllerBase
