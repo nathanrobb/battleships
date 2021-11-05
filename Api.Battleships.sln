@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Battleships", "Api.Battleships\Api.Battleships.csproj", "{69E1512A-1E74-4E11-803A-DF9630891456}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Battleships.Tests", "Api.Battleships.Tests\Api.Battleships.Tests.csproj", "{A3D3EA97-E663-4747-8EE9-28763C557F2F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69E1512A-1E74-4E11-803A-DF9630891456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69E1512A-1E74-4E11-803A-DF9630891456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69E1512A-1E74-4E11-803A-DF9630891456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69E1512A-1E74-4E11-803A-DF9630891456}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3D3EA97-E663-4747-8EE9-28763C557F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3D3EA97-E663-4747-8EE9-28763C557F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3D3EA97-E663-4747-8EE9-28763C557F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3D3EA97-E663-4747-8EE9-28763C557F2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8105F9E-DABB-4F74-9CF3-ADE72F517873}
+	EndGlobalSection
+EndGlobal
