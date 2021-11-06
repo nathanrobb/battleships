@@ -1,12 +1,11 @@
 import React from 'react';
 
 type HeadingProps = {
-  gameId?: number;
+  heading: string;
 };
 
-const Heading: React.FC<HeadingProps> = ({ gameId }) => {
-  const headingText = gameId ? `Game ${gameId}` : 'Start a new Game';
-  return <div>{headingText}</div>;
+const Heading: React.FC<HeadingProps> = ({ heading }) => {
+  return <div>{heading}</div>;
 };
 
 export { Heading };

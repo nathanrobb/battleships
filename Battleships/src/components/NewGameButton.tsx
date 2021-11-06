@@ -1,31 +1,11 @@
-import React, { useState } from 'react';
-import { createNewGame } from '../services/battleshipService';
-import { Game } from '../types';
+import React from 'react';
+import { useGameContext } from '../contexts/GameContext';
 
-type NewGameButtonProps = {
-  onNewGame?: (game: Game) => void;
-};
-
-const NewGameButton: React.FC<NewGameButtonProps> = ({
-  onNewGame = () => {},
-}) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const onNewGameClicked = async () => {
-    try {
-      setIsLoading(true);
-      const response = await createNewGame();
-      onNewGame(response);
-    } catch (error) {
-      // TODO: tell the user somehow.
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const NewGameButton: React.FC = () => {
+  const { gameState, newGame } = useGameContext();
 
   return (
-    <button disabled={isLoading} onClick={onNewGameClicked}>
+    <button disabled={gameState.isLoadingData} onClick={newGame}>
       New Game
     </button>
   );

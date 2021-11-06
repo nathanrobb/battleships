@@ -1,17 +1,20 @@
-import { BattleshipsApp } from './BattleshipsApp';
 import { CoordinateInput } from './CoordinateInput';
 import { FiredTorpedoMessage } from './FiredTorpedoMessage';
 import { FireTorpedoButton } from './FireTorpedoButton';
-import { GameState } from './GameState';
+import { GameMessages } from './GameMessages';
 import { Heading } from './Heading';
 import { NewGameButton } from './NewGameButton';
+
+import { FireTorpedo } from './FireTorpedo';
+import { BattleshipsApp } from './BattleshipsApp';
 
 export {
   BattleshipsApp,
   CoordinateInput,
   FiredTorpedoMessage,
+  FireTorpedo,
   FireTorpedoButton,
-  GameState,
+  GameMessages,
   Heading,
   NewGameButton,
 };

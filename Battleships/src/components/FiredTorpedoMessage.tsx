@@ -1,15 +1,9 @@
 import React from 'react';
-
-type FiredTorpedoMessageProps = {
-  guesses: number;
-  ships: number;
-  shipSunk: boolean;
-  distance: number;
-};
+import { useGameContext } from '../contexts/GameContext';
 
 type Proximity = 'hit' | 'hot' | 'warm' | 'cold';
 
-const getProximityFromDistance = (distance: number): Proximity => {
+const getProximityFromDistance = (distance?: number): Proximity => {
   switch (distance) {
     case 1:
     case 2:
@@ -22,29 +16,26 @@ const getProximityFromDistance = (distance: number): Proximity => {
   }
 };
 
-const FiredTorpedoMessage: React.FC<FiredTorpedoMessageProps> = ({
-  guesses,
-  ships,
-  shipSunk,
-  distance,
-}) => {
-  if (ships === 0) {
+const FiredTorpedoMessage: React.FC = () => {
+  var { gameState } = useGameContext();
+
+  if (gameState.shipsRemaining === 0) {
     return <div>Winner!</div>;
   }
 
-  if (guesses === 0) {
+  if (gameState.guessesRemaining === 0) {
     return <div>Loser :(</div>;
   }
 
-  if (shipSunk) {
+  if (gameState.shipSunk) {
     return <div>Sunk a ship!</div>;
   }
 
-  if (distance === 0) {
+  if (gameState.distance === 0) {
     return <div>Hit!</div>;
   }
 
-  const proximity = getProximityFromDistance(distance);
+  const proximity = getProximityFromDistance(gameState.distance);
   return <div>Miss, you are {proximity}!</div>;
 };
 

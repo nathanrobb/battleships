@@ -1,11 +1,14 @@
 import React from 'react';
 import './App.css';
-import { BattleshipsApp } from './components/BattleshipsApp';
+import { BattleshipsApp } from './components';
+import { GameProvider } from './contexts/GameContext';
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <BattleshipsApp />
+      <GameProvider>
+        <BattleshipsApp />
+      </GameProvider>
     </div>
   );
 };
