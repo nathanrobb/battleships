@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createNewGame } from '../services/battleshipService';
-import { Game } from '../types/Game';
+import { Game } from '../types';
 
 type NewGameButtonProps = {
   onNewGame?: (game: Game) => void;

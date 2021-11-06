@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { fireTorpedo } from '../services/battleshipService';
-import { FiredTorpedoResult } from '../types/FiredTorpedoResult';
+import { FiredTorpedoResult } from '../types';
 
 type FireTorpedoButtonProps = {
   gameId: number;

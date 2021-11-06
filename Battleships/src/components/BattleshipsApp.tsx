@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { FireTorpedoButton } from './FireTorpedoButton';
-import { FiredTorpedoMessage } from './FiredTorpedoMessage';
-import { GameState } from './GameState';
-import { Heading } from './Heading';
-import { NewGameButton } from './NewGameButton';
-import { CoordinateInput } from './CoordinateInput';
-import { FiredTorpedoResult } from '../types/FiredTorpedoResult';
-import { Game } from '../types/Game';
+import {
+  CoordinateInput,
+  FiredTorpedoMessage,
+  FireTorpedoButton,
+  GameState,
+  Heading,
+  NewGameButton,
+} from '.';
+import { FiredTorpedoResult, Game } from '../types';
 
 const BattleshipsApp: React.FC = () => {
   // Add a context/reducer

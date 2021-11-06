@@ -1,5 +1,4 @@
-import { FiredTorpedoResult } from '../types/FiredTorpedoResult';
-import { Game } from '../types/Game';
+import { FiredTorpedoResult, Game } from '../types';
 
 // TODO: Make configurable
 const apiUrl = 'http://localhost:5000';
