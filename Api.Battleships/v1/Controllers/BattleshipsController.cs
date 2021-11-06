@@ -66,7 +66,7 @@ namespace Api.Battleships.v1.Controllers
 				return BadRequest($"{nameof(request.Column)} must be in the range 1 - {Constants.BOARD_SIZE} (inclusive)");
 			}
 
-			_logger.LogDebug($"Fired torpedo at {request.Coordinate}");
+			_logger.LogDebug($"Fired torpedo at {request.Row},{request.Column}");
 
 			// TODO: actually fire the torpedo
 
