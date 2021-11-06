@@ -1,5 +1,7 @@
+using Api.Battleships.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +19,6 @@ namespace Api.Battleships
 
 		public IConfiguration Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
@@ -26,12 +27,23 @@ namespace Api.Battleships
 			{
 				loggingBuilder
 					.ClearProviders()
-					.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace)
+					.SetMinimumLevel(LogLevel.Trace)
 					.AddNLog(Configuration);
+			});
+
+			// Setup database services.
+
+			// Singleton to keep our in-memory SQLite db connection established while the API is running otherwise our db is wiped on dispose.
+			services.AddSingleton<InMemoryDbConnection>();
+			services.AddDbContextFactory<BattleshipsContext, InMemoryBattleshipsContextFactory>(lifetime: ServiceLifetime.Scoped);
+			services.AddScoped(s =>
+			{
+				var context = s.GetRequiredService<IDbContextFactory<BattleshipsContext>>().CreateDbContext();
+				context.Database.EnsureCreated();
+				return context;
 			});
 		}
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
