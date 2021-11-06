@@ -1,14 +1,21 @@
 ﻿namespace Api.Battleships.v1.Models
 {
+	/// <summary>
+	/// The POST /v1/battleships/new-game response object.
+	/// </summary>
 	public class NewGameResponse
 	{
 		/// <summary>
-		/// The number of guesses available to sink all the ships.
+		/// The database id for the new battleships game.
 		/// </summary>
-		public int Guesses { get; set; }
+		public int GameId { get; set; }
 		/// <summary>
-		/// The number of ships to sink.
-		/// </summary>x
-		public int Ships { get; set; }
+		/// The number of guesses remaining to sink all the ships.
+		/// </summary>
+		public int GuessesRemaining { get; set; }
+		/// <summary>
+		/// The number of ships remaining to sink.
+		/// </summary>
+		public int ShipsRemaining { get; set; }
 	}
 }
