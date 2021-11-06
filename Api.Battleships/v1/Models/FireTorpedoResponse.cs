@@ -18,7 +18,6 @@
 		/// <summary>
 		/// The manhattan distance of the fired torpedo to the nearest ship.
 		/// </summary>
-		/// <remarks>
 		public int Distance { get; set; }
 		/// <summary>
 		/// When true, the previously fired torpedo hit and sunk a ship.

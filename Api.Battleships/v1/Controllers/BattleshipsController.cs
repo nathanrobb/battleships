@@ -31,6 +31,7 @@ namespace Api.Battleships.v1.Controllers
 			return Ok(new NewGameResponse
 			{
 				GameId = gameId,
+				BoardSize = Constants.BOARD_SIZE,
 				GuessesRemaining = Constants.MAX_GUESSES,
 				ShipsRemaining = Constants.PLACED_SHIP_COUNT,
 			});

@@ -10,6 +10,10 @@
 		/// </summary>
 		public int GameId { get; set; }
 		/// <summary>
+		/// The number rows and columns where the ships can be placed.
+		/// </summary>
+		public int BoardSize { get; set; }
+		/// <summary>
 		/// The number of guesses remaining to sink all the ships.
 		/// </summary>
 		public int GuessesRemaining { get; set; }

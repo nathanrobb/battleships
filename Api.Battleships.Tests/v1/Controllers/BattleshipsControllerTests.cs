@@ -28,6 +28,7 @@ namespace Api.Battleships.Tests.v1.Controllers
 			var actualNewGameResponse = actualActionResult.AssertOkGetValue<NewGameResponse>();
 
 			Assert.AreEqual(1, actualNewGameResponse.GameId);
+			Assert.AreEqual(8, actualNewGameResponse.BoardSize);
 			Assert.AreEqual(20, actualNewGameResponse.GuessesRemaining);
 			Assert.AreEqual(2, actualNewGameResponse.ShipsRemaining);
 		}
