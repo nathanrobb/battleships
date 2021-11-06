@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 namespace Api.Battleships.Tests.v1.Controllers
 {
+	[TestFixture]
 	public class BattleshipsControllerTests
 	{
 		private BattleshipsController _battleshipsController;
@@ -26,8 +27,9 @@ namespace Api.Battleships.Tests.v1.Controllers
 			// Assert
 			var actualNewGameResponse = actualActionResult.AssertOkGetValue<NewGameResponse>();
 
-			Assert.AreEqual(20, actualNewGameResponse.Guesses);
-			Assert.AreEqual(2, actualNewGameResponse.Ships);
+			Assert.AreEqual(1, actualNewGameResponse.GameId);
+			Assert.AreEqual(20, actualNewGameResponse.GuessesRemaining);
+			Assert.AreEqual(2, actualNewGameResponse.ShipsRemaining);
 		}
 
 		[Test]
@@ -36,40 +38,93 @@ namespace Api.Battleships.Tests.v1.Controllers
 			// Arrange
 			var request = new FireTorpedoRequest
 			{
-				Coordinate = "3,7",
+				Row = 3,
+				Column = 5,
 			};
 
 			// Act
-			var actualActionResult = _battleshipsController.PatchFireTorpedo(request);
+			var actualActionResult = _battleshipsController.PatchFireTorpedo(1, request);
 
 			// Assert
 			var actualFireTorpedoResponse = actualActionResult.AssertOkGetValue<FireTorpedoResponse>();
 
 			Assert.AreEqual(20, actualFireTorpedoResponse.GuessesRemaining);
 			Assert.AreEqual(2, actualFireTorpedoResponse.ShipsRemaining);
-			Assert.AreEqual("", actualFireTorpedoResponse.ShipProximity);
+			Assert.AreEqual(4, actualFireTorpedoResponse.Distance);
 			Assert.AreEqual(false, actualFireTorpedoResponse.ShipSunk);
 		}
 
 		[Test]
-		[TestCase(null)]
-		[TestCase("")]
-		[TestCase("   ")]
-		public void PatchFireTorpedo_WithNullOrWhitespaceCoordinates_ReturnsExpectBadRequest(string coordinates)
+		public void PatchFireTorpedo_WithInvalidGameId_ReturnsExpectedBadRequest()
 		{
 			// Arrange
 			var request = new FireTorpedoRequest
 			{
-				Coordinate = coordinates,
+				Row = 3,
+				Column = 5,
 			};
 
 			// Act
-			var actualActionResult = _battleshipsController.PatchFireTorpedo(request);
+			var actualActionResult = _battleshipsController.PatchFireTorpedo(0, request);
 
 			// Assert
 			var badRequestMessage = actualActionResult.AssertBadRequestGetMessage();
 
-			Assert.AreEqual("Must specify coordinates in request body", badRequestMessage);
+			Assert.AreEqual("Must specify an existing game to fire a torpedo", badRequestMessage);
+		}
+
+		[Test]
+		public void PatchFireTorpedo_WithMissingRequestBody_ReturnsExpectedBadRequest()
+		{
+			// Act
+			var actualActionResult = _battleshipsController.PatchFireTorpedo(1, null);
+
+			// Assert
+			var badRequestMessage = actualActionResult.AssertBadRequestGetMessage();
+
+			Assert.AreEqual("Must specify row and column in request body", badRequestMessage);
+		}
+
+		[Test]
+		[TestCase(0)]
+		[TestCase(9)]
+		public void PatchFireTorpedo_WithInvalidRow_ReturnsExpectedBadRequest(int row)
+		{
+			// Arrange
+			var request = new FireTorpedoRequest
+			{
+				Row = row,
+				Column = 5,
+			};
+
+			// Act
+			var actualActionResult = _battleshipsController.PatchFireTorpedo(1, request);
+
+			// Assert
+			var badRequestMessage = actualActionResult.AssertBadRequestGetMessage();
+
+			Assert.AreEqual("Row must be in the range 1 - 8 (inclusive)", badRequestMessage);
+		}
+
+		[Test]
+		[TestCase(0)]
+		[TestCase(9)]
+		public void PatchFireTorpedo_WithInvalidColumn_ReturnsExpectedBadRequest(int column)
+		{
+			// Arrange
+			var request = new FireTorpedoRequest
+			{
+				Row = 3,
+				Column = column,
+			};
+
+			// Act
+			var actualActionResult = _battleshipsController.PatchFireTorpedo(1, request);
+
+			// Assert
+			var badRequestMessage = actualActionResult.AssertBadRequestGetMessage();
+
+			Assert.AreEqual("Column must be in the range 1 - 8 (inclusive)", badRequestMessage);
 		}
 	}
 }

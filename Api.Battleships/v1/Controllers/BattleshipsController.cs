@@ -23,22 +23,48 @@ namespace Api.Battleships.v1.Controllers
 		[ProducesResponseType(typeof(NewGameResponse), StatusCodes.Status200OK)]
 		public IActionResult PostNewGame()
 		{
-			// TODO: actually start a new game
+			// TODO: create game.
+			const int gameId = 1;
+
+			_logger.LogDebug($"New game started, gameId: {gameId}");
 
 			return Ok(new NewGameResponse
 			{
-				Guesses = 20,
-				Ships = 2,
+				GameId = gameId,
+				GuessesRemaining = Constants.MAX_GUESSES,
+				ShipsRemaining = Constants.PLACED_SHIP_COUNT,
 			});
 		}
 
 		[AllowAnonymous]
-		[HttpPatch("fire-torpedo")]
+		[HttpPatch("{gameId:int}/fire-torpedo")]
 		[ProducesResponseType(typeof(FireTorpedoResponse), StatusCodes.Status200OK)]
-		public IActionResult PatchFireTorpedo([FromBody] FireTorpedoRequest request)
+		public IActionResult PatchFireTorpedo(int gameId, [FromBody] FireTorpedoRequest request)
 		{
-			if (request == null || string.IsNullOrWhiteSpace(request.Coordinate))
-				return BadRequest("Must specify coordinates in request body");
+			// TODO: validate the game id.
+			if (gameId <= 0)
+			{
+				_logger.LogInformation($"Invalid game id: {gameId}");
+				return BadRequest("Must specify an existing game to fire a torpedo");
+			}
+
+			if (request == null)
+			{
+				_logger.LogInformation("Body not specified");
+				return BadRequest("Must specify row and column in request body");
+			}
+
+			if (request.Row < 1 || request.Row > Constants.BOARD_SIZE)
+			{
+				_logger.LogInformation($"Invalid row: {request.Row}, board size: {Constants.BOARD_SIZE}");
+				return BadRequest($"{nameof(request.Row)} must be in the range 1 - {Constants.BOARD_SIZE} (inclusive)");
+			}
+
+			if (request.Column < 1 || request.Column > Constants.BOARD_SIZE)
+			{
+				_logger.LogInformation($"Invalid column: {request.Column}, board size: {Constants.BOARD_SIZE}");
+				return BadRequest($"{nameof(request.Column)} must be in the range 1 - {Constants.BOARD_SIZE} (inclusive)");
+			}
 
 			_logger.LogDebug($"Fired torpedo at {request.Coordinate}");
 
@@ -46,9 +72,9 @@ namespace Api.Battleships.v1.Controllers
 
 			return Ok(new FireTorpedoResponse
 			{
-				GuessesRemaining = 20,
-				ShipsRemaining = 2,
-				ShipProximity = "",
+				GuessesRemaining = Constants.MAX_GUESSES,
+				ShipsRemaining = Constants.PLACED_SHIP_COUNT,
+				Distance = 4,
 				ShipSunk = false,
 			});
 		}

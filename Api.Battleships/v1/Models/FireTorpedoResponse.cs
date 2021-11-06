@@ -1,5 +1,8 @@
 ﻿namespace Api.Battleships.v1.Models
 {
+	/// <summary>
+	/// The PATCH /v1/battleships/{gameId}/fire-torpedo response object.
+	/// </summary>
 	public class FireTorpedoResponse
 	{
 		/// <summary>
@@ -13,16 +16,10 @@
 		/// <remarks>When this reaches 0, the game is won.</remarks>
 		public int ShipsRemaining { get; set; }
 		/// <summary>
-		/// The proximity of the fired torpedo, one of either: hit, hot, warm, cold.
+		/// The manhattan distance of the fired torpedo to the nearest ship.
 		/// </summary>
 		/// <remarks>
-		/// Hit is when a ship cell is hit.
-		/// Hot is when a ship cell is within 1-2 cells.
-		/// Warm is when a ship cell is within 3-4 cells.
-		/// Cold is when a ship cell is greater than 4 cells away.
-		/// </remarks>
-		// TODO: return an enum/number instead?
-		public string ShipProximity { get; set; }
+		public int Distance { get; set; }
 		/// <summary>
 		/// When true, the previously fired torpedo hit and sunk a ship.
 		/// </summary>
