@@ -51,6 +51,7 @@ namespace Api.Battleships
 			services.AddScoped<IRandomGenerator, RandomGenerator>();
 			services.AddScoped<ShipDistanceService>();
 			services.AddScoped<ShipPlacerService>();
+			services.AddScoped<IGameService, GameService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

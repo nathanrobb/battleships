@@ -1,4 +1,8 @@
-﻿using Api.Battleships.v1.Models;
+﻿using System;
+using System.Threading.Tasks;
+using Api.Battleships.Services;
+using Api.Battleships.Services.Models;
+using Api.Battleships.v1.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,41 +15,47 @@ namespace Api.Battleships.v1.Controllers
 	[ApiController]
 	public class BattleshipsController : ControllerBase
 	{
+		private readonly IGameService _gameService;
 		private readonly ILogger<BattleshipsController> _logger;
 
-		public BattleshipsController(ILogger<BattleshipsController> logger)
+		public BattleshipsController(IGameService gameService, ILogger<BattleshipsController> logger)
 		{
+			_gameService = gameService;
 			_logger = logger;
 		}
 
 		[AllowAnonymous]
 		[HttpPost("new-game")]
 		[ProducesResponseType(typeof(NewGameResponse), StatusCodes.Status200OK)]
-		public IActionResult PostNewGame()
+		public async Task<IActionResult> PostNewGameAsync()
 		{
-			// TODO: create game.
-			const int gameId = 1;
+			// TODO: take these as post data?
+			const int boardSize = Constants.BOARD_SIZE;
+			const int guesses = Constants.MAX_GUESSES;
+			const int placedShipCount = Constants.PLACED_SHIP_COUNT;
 
-			_logger.LogDebug($"New game started, gameId: {gameId}");
+			var game = await _gameService.CreateGameAsync(placedShipCount, boardSize, guesses);
+
+			_logger.LogDebug($"New game started, gameId: {game.Id}");
 
 			return Ok(new NewGameResponse
 			{
-				GameId = gameId,
-				BoardSize = Constants.BOARD_SIZE,
-				GuessesRemaining = Constants.MAX_GUESSES,
-				ShipsRemaining = Constants.PLACED_SHIP_COUNT,
+				GameId = game.Id,
+				BoardSize = game.BoardSize,
+				GuessesRemaining = game.TotalGuesses,
+				ShipsRemaining = game.TotalShips,
 			});
 		}
 
 		[AllowAnonymous]
 		[HttpPatch("{gameId:int}/fire-torpedo")]
 		[ProducesResponseType(typeof(FireTorpedoResponse), StatusCodes.Status200OK)]
-		public IActionResult PatchFireTorpedo(int gameId, [FromBody] FireTorpedoRequest request)
+		public async Task<IActionResult> PatchFireTorpedoAsync(int gameId, [FromBody] FireTorpedoRequest request)
 		{
-			// TODO: validate the game id.
-			if (gameId <= 0)
+			var game = await _gameService.GetGameAsync(gameId);
+			if (game == null)
 			{
-				_logger.LogInformation($"Invalid game id: {gameId}");
+				_logger.LogInformation($"Non-existent game id: {gameId}");
 				return BadRequest("Must specify an existing game to fire a torpedo");
 			}
 
@@ -55,28 +65,42 @@ namespace Api.Battleships.v1.Controllers
 				return BadRequest("Must specify row and column in request body");
 			}
 
-			if (request.Row < 1 || request.Row > Constants.BOARD_SIZE)
+			if (request.Row < 1 || request.Row > game.BoardSize)
 			{
-				_logger.LogInformation($"Invalid row: {request.Row}, board size: {Constants.BOARD_SIZE}");
-				return BadRequest($"{nameof(request.Row)} must be in the range 1 - {Constants.BOARD_SIZE} (inclusive)");
+				_logger.LogInformation($"Invalid row: {request.Row}, board size: {game.BoardSize}");
+				return BadRequest($"{nameof(request.Row)} must be in the range 1 - {game.BoardSize} (inclusive)");
 			}
 
-			if (request.Column < 1 || request.Column > Constants.BOARD_SIZE)
+			if (request.Column < 1 || request.Column > game.BoardSize)
 			{
-				_logger.LogInformation($"Invalid column: {request.Column}, board size: {Constants.BOARD_SIZE}");
-				return BadRequest($"{nameof(request.Column)} must be in the range 1 - {Constants.BOARD_SIZE} (inclusive)");
+				_logger.LogInformation($"Invalid column: {request.Column}, board size: {game.BoardSize}");
+				return BadRequest($"{nameof(request.Column)} must be in the range 1 - {game.BoardSize} (inclusive)");
 			}
 
-			_logger.LogDebug($"Fired torpedo at {request.Row},{request.Column}");
+			var coordinate = new Coordinate(request.Row, request.Column);
 
-			// TODO: actually fire the torpedo
+			// Verify the torpedo hasn't already been fired at the specified coordinate.
+			var alreadyFiredTorpedo = await _gameService.TorpedoAlreadyFiredAsync(gameId, coordinate);
+			if (alreadyFiredTorpedo)
+			{
+				_logger.LogInformation($"Already fired at the provided coordinates row: {coordinate.Row}, column: {coordinate.Column}");
+				return BadRequest("Already fired there, try somewhere new");
+			}
+
+			_logger.LogDebug($"Firing torpedo at {coordinate.Row},{coordinate.Column}");
+
+			var torpedoResult = await _gameService.FireTorpedoAsync(game.Id, coordinate);
+			if (torpedoResult == null)
+				throw new Exception("Don't know how...");
+
+			_logger.LogDebug($"Fired torpedo at {request.Row},{request.Column}, distance: {torpedoResult.Distance}");
 
 			return Ok(new FireTorpedoResponse
 			{
-				GuessesRemaining = Constants.MAX_GUESSES,
-				ShipsRemaining = Constants.PLACED_SHIP_COUNT,
-				Distance = 4,
-				ShipSunk = false,
+				GuessesRemaining = torpedoResult.GuessesRemaining,
+				ShipsRemaining = torpedoResult.ShipsRemaining,
+				Distance = torpedoResult.Distance,
+				ShipSunk = torpedoResult.ShipSunk,
 			});
 		}
 	}
