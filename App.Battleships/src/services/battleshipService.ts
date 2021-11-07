@@ -1,8 +1,5 @@
 import { FiredTorpedoResult, Game } from '../types';
 
-// TODO: Make configurable
-const apiUrl = 'http://localhost:5000';
-
 type NewGameResponse = {
   gameId: number;
   boardSize: number;
@@ -11,7 +8,7 @@ type NewGameResponse = {
 };
 
 export const createNewGame = async (): Promise<Game> => {
-  const response = await fetch(`${apiUrl}/v1/battleships/new-game`, {
+  const response = await fetch('/v1/battleships/new-game', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -53,7 +50,7 @@ export const fireTorpedo = async (
   };
 
   const response = await fetch(
-    `${apiUrl}/v1/battleships/${gameId}/fire-torpedo`,
+    `/v1/battleships/${gameId}/fire-torpedo`,
     {
       method: 'PATCH',
       body: JSON.stringify(body),
