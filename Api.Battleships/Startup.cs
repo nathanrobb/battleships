@@ -1,4 +1,6 @@
+using System;
 using Api.Battleships.Database;
+using Api.Battleships.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +44,13 @@ namespace Api.Battleships
 				context.Database.EnsureCreated();
 				return context;
 			});
+
+			// Setup business logic services.
+
+			services.AddScoped<Random>();
+			services.AddScoped<IRandomGenerator, RandomGenerator>();
+			services.AddScoped<ShipDistanceService>();
+			services.AddScoped<ShipPlacerService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
