@@ -23,6 +23,8 @@ const FireTorpedo: React.FC = () => {
     const row = Number.parseInt(matches[1]);
     const column = Number.parseInt(matches[2]);
 
+    setErrorMessage('');
+
     coordinatesEntered(row, column);
   };
 
@@ -32,6 +34,11 @@ const FireTorpedo: React.FC = () => {
     setValue('');
   };
 
+  const disable =
+    gameState.isLoadingData ||
+    gameState.guessesRemaining === 0 ||
+    gameState.shipsRemaining === 0;
+
   return (
     <div>
       <div>
@@ -40,7 +47,7 @@ const FireTorpedo: React.FC = () => {
           type="text"
           placeholder="row,column"
           value={value}
-          disabled={gameState.isLoadingData}
+          disabled={disable}
           onChange={(e) => setValue(e.target.value)}
           onBlur={(e) => onBlur(e.target.value)}
         />
@@ -48,11 +55,7 @@ const FireTorpedo: React.FC = () => {
       </div>
 
       <button
-        disabled={
-          gameState.isLoadingData ||
-          gameState.guessesRemaining === 0 ||
-          gameState.shipsRemaining === 0
-        }
+        disabled={disable || errorMessage !== ''}
         onClick={handleOnClicked}
       >
         Fire!
