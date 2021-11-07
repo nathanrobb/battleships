@@ -147,7 +147,7 @@ namespace Api.Battleships.Services
 			};
 		}
 
-		public Game CreateGame(int boardSize, int guesses, int shipCount, IEnumerable<ShipPlacement> shipPlacements)
+		private Game CreateGame(int boardSize, int guesses, int shipCount, IEnumerable<ShipPlacement> shipPlacements)
 		{
 			var game = new Game
 			{
