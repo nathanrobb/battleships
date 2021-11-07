@@ -24,7 +24,7 @@ const FiredTorpedoMessage: React.FC = () => {
   }
 
   if (gameState.guessesRemaining === 0) {
-    return <div>Loser :(</div>;
+    return <div>You lost :(</div>;
   }
 
   if (gameState.shipSunk) {
