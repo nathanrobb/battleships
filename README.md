@@ -10,7 +10,7 @@ Basic battleships game implemented in WebAPI with a React front end.
 
 ### App
 
-1. `cd Battleships`
+1. `cd App.Battleships`
 1. `npm install`
 
 ## To run
@@ -18,7 +18,7 @@ Basic battleships game implemented in WebAPI with a React front end.
 Ensure your environment meets the requirements above.
 
 1. Run app
-   1. `cd Battleships`
+   1. `cd App.Battleships`
    1. `npm install`
    1. `npm start`
 1. Run api
