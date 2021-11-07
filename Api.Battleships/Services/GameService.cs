@@ -83,6 +83,7 @@ namespace Api.Battleships.Services
 		public async Task<TorpedoResult> FireTorpedoAsync(int gameId, Coordinate torpedoCoordinate)
 		{
 			var game = await _battleshipsContext.Games
+				.AsNoTracking()
 				.SingleOrDefaultAsync(g => g.Id == gameId);
 
 			if (game == null)
@@ -114,10 +115,9 @@ namespace Api.Battleships.Services
 			guessCount++;
 			var torpedo = new Torpedo
 			{
+				GameId = game.Id,
 				Row = torpedoCoordinate.Row,
 				Column = torpedoCoordinate.Column,
-
-				Game = game,
 			};
 
 			_battleshipsContext.Torpedoes.Add(torpedo);
