@@ -3,7 +3,7 @@
 	public class TorpedoResult
 	{
 		/// <summary>
-		/// The proximity of the fired torpedo, one of either: hit, hot, warm, cold.
+		/// The manhattan distance of the fired torpedo to the nearest ship.
 		/// </summary>
 		public int Distance { get; set; }
 		/// <summary>
