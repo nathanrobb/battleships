@@ -13,6 +13,7 @@ namespace Api.Battleships.Database.Models
 		public virtual Ship Ship { get; set; }
 		public virtual Torpedo HitByTorpedo { get; set; }
 	}
+
 	internal static class ShipCellMapping
 	{
 		internal static ModelBuilder MapShipCell(this ModelBuilder modelBuilder)
