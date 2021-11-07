@@ -87,7 +87,10 @@ namespace Api.Battleships.Services
 				.SingleOrDefaultAsync(g => g.Id == gameId);
 
 			if (game == null)
-				throw new ArgumentNullException(nameof(game));
+			{
+				_logger.LogError($"No game matching the provided game id: {gameId}");
+				throw new ArgumentException("No game matching the provided game id", nameof(gameId));
+			}
 
 			var guessCount = await _battleshipsContext.Torpedoes
 				.Where(t => t.GameId == gameId)
