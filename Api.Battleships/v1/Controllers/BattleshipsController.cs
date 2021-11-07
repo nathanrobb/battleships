@@ -91,7 +91,10 @@ namespace Api.Battleships.v1.Controllers
 
 			var torpedoResult = await _gameService.FireTorpedoAsync(game.Id, coordinate);
 			if (torpedoResult == null)
-				throw new Exception("Don't know how...");
+			{
+				_logger.LogError($"Received no torpedo result from FireTorpedo, gameId {game.Id}, row: {coordinate.Row}, column: {coordinate.Column}");
+				throw new Exception("Unexpected error");
+			}
 
 			_logger.LogDebug($"Fired torpedo at {request.Row},{request.Column}, distance: {torpedoResult.Distance}");
 
