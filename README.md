@@ -18,5 +18,5 @@ Requires `node 14.x` and `dotnet core 3.1`
    1. `npm install`
    1. `npm start`
 1. Run api
-   1. `cd BattleShips.Api`
+   1. `cd Api.BattleShips`
    1. `dotnet run`
