@@ -82,33 +82,21 @@ namespace Api.Battleships.Services
 
 		public async Task<TorpedoResult> FireTorpedoAsync(int gameId, Coordinate torpedoCoordinate)
 		{
-			// Load the complete game state into memory to save multiple db queries at the cost of tracking all these objects in the change tracker.
 			var game = await _battleshipsContext.Games
-				.Include(g => g.Torpedoes)
-				.Include(g => g.Ships)
-				.ThenInclude(s => s.ShipCells)
 				.SingleOrDefaultAsync(g => g.Id == gameId);
 
 			if (game == null)
 				throw new ArgumentNullException(nameof(game));
-			
-			var torpedo = new Torpedo
-			{
-				Row = torpedoCoordinate.Row,
-				Column = torpedoCoordinate.Column,
 
-				Game = game,
-			};
+			var guessCount = await _battleshipsContext.Torpedoes
+				.Where(t => t.GameId == gameId)
+				.CountAsync();
 
-			// Add the new torpedo to the games fired torpedoes.
-			_battleshipsContext.Torpedoes.Add(torpedo);
-
-			var guessCount = game.Torpedoes.Count;
-
-			var remainingShipCells = game.Ships
-				.SelectMany(s => s.ShipCells)
+			var remainingShipCells = await _battleshipsContext.ShipCells
+				.Where(c => c.Ship.GameId == gameId)
 				.Where(c => c.TorpedoId == null)
-				.ToList();
+				.OrderBy(c => c.Id)
+				.ToListAsync();
 
 			// Already won...
 			if (remainingShipCells.Count == 0)
@@ -122,22 +110,34 @@ namespace Api.Battleships.Services
 				};
 			}
 
+			// Add the new torpedo to the games fired torpedoes.
+			guessCount++;
+			var torpedo = new Torpedo
+			{
+				Row = torpedoCoordinate.Row,
+				Column = torpedoCoordinate.Column,
+
+				Game = game,
+			};
+
+			_battleshipsContext.Torpedoes.Add(torpedo);
+
 			var minDistance = _shipDistanceService.GetClosestShipCell(torpedoCoordinate, remainingShipCells);
+
+			var remainingShips = GetRemainingShips(remainingShipCells);
 
 			// 0 distance means the torpedo hit the ship.
 			var shipSunk = false;
 			if (minDistance.Distance == 0)
 			{
-				var remainingShipsBefore = GetRemainingShips(game.Ships);
+				var remainingShipsBeforeHit = remainingShips;
 				minDistance.ShipCell.HitByTorpedo = torpedo;
-				var remainingShipsAfter = GetRemainingShips(game.Ships);
+				remainingShips = GetRemainingShips(remainingShipCells);
 
-				shipSunk = remainingShipsAfter < remainingShipsBefore;
+				shipSunk = remainingShips < remainingShipsBeforeHit;
 			}
 
 			await _battleshipsContext.SaveChangesAsync();
-
-			var remainingShips = GetRemainingShips(game.Ships);
 
 			return new TorpedoResult
 			{
@@ -187,10 +187,11 @@ namespace Api.Battleships.Services
 			return game;
 		}
 
-		private static int GetRemainingShips(IEnumerable<Ship> ships)
+		private static int GetRemainingShips(IEnumerable<ShipCell> shipCells)
 		{
-			return ships
-				.Where(s => s.ShipCells.Any(c => c.TorpedoId == null && c.HitByTorpedo == null))
+			return shipCells
+				.Where(c => c.TorpedoId == null && c.HitByTorpedo == null)
+				.Select(c => c.ShipId)
 				.Distinct()
 				.Count();
 		}
