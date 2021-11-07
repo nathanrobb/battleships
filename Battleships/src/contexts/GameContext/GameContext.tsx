@@ -39,10 +39,10 @@ export const GameProvider: React.FC<{}> = ({ children }) => {
             type: GameActionType.NewGame,
             game: game,
           });
-        } catch (e) {
+        } catch (e: any) {
           dispatch({
             type: GameActionType.Error,
-            errorMessage: 'Unable to make a new game',
+            errorMessage: e?.message ?? 'Unable to make a new game',
           });
         }
       },
@@ -76,10 +76,10 @@ export const GameProvider: React.FC<{}> = ({ children }) => {
             type: GameActionType.FiredTorpedo,
             firedTorpedoResult: firedTorpedoResult,
           });
-        } catch (e) {
+        } catch (e: any) {
           dispatch({
             type: GameActionType.Error,
-            errorMessage: 'Unable to make a new game',
+            errorMessage: e?.message ?? 'Unable to fire torpedo',
           });
         }
       },

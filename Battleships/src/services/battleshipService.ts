@@ -18,6 +18,8 @@ export const createNewGame = async (): Promise<Game> => {
     },
   });
 
+  if (!response.ok) throw new Error(await response.json());
+
   const data: NewGameResponse = await response.json();
 
   return {
@@ -61,6 +63,8 @@ export const fireTorpedo = async (
       },
     },
   );
+
+  if (!response.ok) throw new Error(await response.json());
 
   const data: FireTorpedoResponse = await response.json();
 
