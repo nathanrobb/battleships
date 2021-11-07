@@ -5,7 +5,7 @@ import { GameProvider } from './contexts/GameContext';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
+    <div className="app">
       <GameProvider>
         <BattleshipsApp />
       </GameProvider>

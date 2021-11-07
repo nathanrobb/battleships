@@ -5,7 +5,7 @@ type HeadingProps = {
 };
 
 const Heading: React.FC<HeadingProps> = ({ heading }) => {
-  return <div>{heading}</div>;
+  return <div className="header">{heading}</div>;
 };
 
 export { Heading };

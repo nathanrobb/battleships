@@ -1,5 +1,5 @@
 import React from 'react';
-import { FireTorpedo, Heading, NewGameButton } from '.';
+import { BattleShipGame, ErrorMessage, Heading, NewGameButton } from '.';
 import { useGameContext } from '../contexts/GameContext';
 
 const BattleshipsApp: React.FC = () => {
@@ -12,7 +12,8 @@ const BattleshipsApp: React.FC = () => {
   return (
     <div>
       <Heading heading={headingText} />
-      {gameState.hasGame && <FireTorpedo />}
+      <ErrorMessage>{gameState.errorMessage}</ErrorMessage>
+      {gameState.hasGame && <BattleShipGame />}
       <NewGameButton />
     </div>
   );

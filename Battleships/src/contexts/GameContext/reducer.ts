@@ -60,6 +60,7 @@ export const GameReducer = (
     case GameActionType.NewGameBeginRequest:
       return {
         ...initialGameState,
+        isLoadingData: true,
       };
     case GameActionType.NewGame:
       return {
