@@ -72,7 +72,7 @@ namespace Api.Battleships
 				app.UseDeveloperExceptionPage();
 			}
 			else
-            {
+			{
 				app.UseHttpsRedirection();
 			}
 
