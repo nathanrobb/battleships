@@ -49,17 +49,14 @@ export const fireTorpedo = async (
     Column: column,
   };
 
-  const response = await fetch(
-    `/v1/battleships/${gameId}/fire-torpedo`,
-    {
-      method: 'PATCH',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+  const response = await fetch(`/v1/battleships/${gameId}/fire-torpedo`, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
-  );
+  });
 
   if (!response.ok) throw new Error(await response.json());
 
