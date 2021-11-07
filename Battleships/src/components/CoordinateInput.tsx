@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ErrorMessage } from '.';
 import { useGameContext } from '../contexts/GameContext';
 
 type CoordinateInputProps = {
@@ -43,7 +44,7 @@ const CoordinateInput: React.FC<CoordinateInputProps> = ({
         onChange={(e) => onChange(e.target.value)}
         onBlur={(e) => onBlur(e.target.value)}
       />
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import { ErrorMessage } from './ErrorMessage';
+
 import { CoordinateInput } from './CoordinateInput';
 import { FiredTorpedoMessage } from './FiredTorpedoMessage';
 import { FireTorpedoButton } from './FireTorpedoButton';
@@ -11,6 +13,7 @@ import { BattleshipsApp } from './BattleshipsApp';
 export {
   BattleshipsApp,
   CoordinateInput,
+  ErrorMessage,
   FiredTorpedoMessage,
   FireTorpedo,
   FireTorpedoButton,
