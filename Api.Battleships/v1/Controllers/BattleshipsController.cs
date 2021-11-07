@@ -27,6 +27,7 @@ namespace Api.Battleships.v1.Controllers
 		[AllowAnonymous]
 		[HttpPost("new-game")]
 		[ProducesResponseType(typeof(NewGameResponse), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> PostNewGameAsync()
 		{
 			// TODO: take these as post data?
@@ -50,6 +51,7 @@ namespace Api.Battleships.v1.Controllers
 		[AllowAnonymous]
 		[HttpPatch("{gameId:int}/fire-torpedo")]
 		[ProducesResponseType(typeof(FireTorpedoResponse), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> PatchFireTorpedoAsync(int gameId, [FromBody] FireTorpedoRequest request)
 		{
 			var game = await _gameService.GetGameAsync(gameId);
