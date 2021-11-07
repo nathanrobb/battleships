@@ -27,6 +27,7 @@ namespace Api.Battleships.v1.Controllers
 		[AllowAnonymous]
 		[HttpPost("new-game")]
 		[ProducesResponseType(typeof(NewGameResponse), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> PostNewGameAsync()
 		{
 			// TODO: take these as post data?
@@ -50,6 +51,7 @@ namespace Api.Battleships.v1.Controllers
 		[AllowAnonymous]
 		[HttpPatch("{gameId:int}/fire-torpedo")]
 		[ProducesResponseType(typeof(FireTorpedoResponse), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> PatchFireTorpedoAsync(int gameId, [FromBody] FireTorpedoRequest request)
 		{
 			var game = await _gameService.GetGameAsync(gameId);
@@ -91,7 +93,10 @@ namespace Api.Battleships.v1.Controllers
 
 			var torpedoResult = await _gameService.FireTorpedoAsync(game.Id, coordinate);
 			if (torpedoResult == null)
-				throw new Exception("Don't know how...");
+			{
+				_logger.LogError($"Received no torpedo result from FireTorpedo, gameId {game.Id}, row: {coordinate.Row}, column: {coordinate.Column}");
+				throw new Exception("Unexpected error");
+			}
 
 			_logger.LogDebug($"Fired torpedo at {request.Row},{request.Column}, distance: {torpedoResult.Distance}");
 
