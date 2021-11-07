@@ -71,6 +71,10 @@ namespace Api.Battleships
 			{
 				app.UseDeveloperExceptionPage();
 			}
+			else
+            {
+				app.UseHttpsRedirection();
+			}
 
 			app.UseSwagger();
 			app.UseSwaggerUI(c =>
@@ -78,8 +82,6 @@ namespace Api.Battleships
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Battleships API V1");
 				c.RoutePrefix = string.Empty;
 			});
-
-			app.UseHttpsRedirection();
 
 			app.UseRouting();
 
