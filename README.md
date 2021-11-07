@@ -1,6 +1,10 @@
 # battleships
 
-Basic battleships game implemented in WebAPI
+Basic battleships game implemented in WebAPI with a React front end.
+
+## Requirements
+
+`node 14.x` and `dotnet core 3.1`
 
 ## To Develop
 
@@ -11,7 +15,7 @@ Basic battleships game implemented in WebAPI
 
 ## To run
 
-Requires `node 14.x` and `dotnet core 3.1`
+Ensure your environment meets the requirements above.
 
 1. Run app
    1. `cd Battleships`
@@ -20,3 +24,9 @@ Requires `node 14.x` and `dotnet core 3.1`
 1. Run api
    1. `cd Api.BattleShips`
    1. `dotnet run`
+
+## To test
+
+1. Run api unit tests
+   1. `cd Api.BattleShips.Tests`
+   1. `dotnet test`
