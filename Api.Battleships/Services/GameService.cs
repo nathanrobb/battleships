@@ -122,19 +122,18 @@ namespace Api.Battleships.Services
 
 			_battleshipsContext.Torpedoes.Add(torpedo);
 
-			var minDistance = _shipDistanceService.GetClosestShipCell(torpedoCoordinate, remainingShipCells);
-
-			var remainingShips = GetRemainingShips(remainingShipCells);
+			var minDistance =_shipDistanceService.GetClosestShipCell(torpedoCoordinate, remainingShipCells);
 
 			// 0 distance means the torpedo hit the ship.
 			var shipSunk = false;
 			if (minDistance.Distance == 0)
 			{
-				var remainingShipsBeforeHit = remainingShips;
 				minDistance.ShipCell.HitByTorpedo = torpedo;
-				remainingShips = GetRemainingShips(remainingShipCells);
 
-				shipSunk = remainingShips < remainingShipsBeforeHit;
+				// This cell is no longer 'remaining', remove it from the list.
+				remainingShipCells.Remove(minDistance.ShipCell);
+
+				shipSunk = remainingShipCells.All(c => c.ShipId != minDistance.ShipCell.ShipId);
 			}
 
 			await _battleshipsContext.SaveChangesAsync();
@@ -144,7 +143,7 @@ namespace Api.Battleships.Services
 				Distance = minDistance.Distance,
 				ShipSunk = shipSunk,
 				GuessesRemaining = game.TotalGuesses - guessCount,
-				ShipsRemaining = remainingShips,
+				ShipsRemaining = remainingShipCells.Select(c => c.ShipId).Distinct().Count(),
 			};
 		}
 
@@ -185,15 +184,6 @@ namespace Api.Battleships.Services
 			}
 
 			return game;
-		}
-
-		private static int GetRemainingShips(IEnumerable<ShipCell> shipCells)
-		{
-			return shipCells
-				.Where(c => c.TorpedoId == null && c.HitByTorpedo == null)
-				.Select(c => c.ShipId)
-				.Distinct()
-				.Count();
 		}
 	}
 }
